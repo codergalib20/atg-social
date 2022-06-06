@@ -10,19 +10,19 @@ export const postsReducer = (state = initialState, action) => {
         case GET_POSTS_REQUEST:
             return {
                 ...state,
-                loading: true
+                isLoading: true
             }
         case GET_POSTS_SUCCESS:
             return {
                 ...state,
                 posts: action.payload,
-                loading: false
+                isLoading: false
             }
         case GET_POSTS_FAILURE:
             return {
                 ...state,
                 error: action.payload,
-                loading: false
+                isLoading: false
             }
         default:
             return state;
