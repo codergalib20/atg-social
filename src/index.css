@@ -29,3 +29,6 @@ code {
 .container{
   max-width: 1200px;
 }
+.shadow-modal{
+  box-shadow: 0px 0px 30px #0890b2b6;
+}

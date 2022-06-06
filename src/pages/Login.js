@@ -13,7 +13,7 @@ const Login = () => {
         } catch (err) {
             setErrors(err.response.data);
         }
-    };  
+    };
     return (
         <div>
             <div className="container mx-auto px-4 min-h-screen">

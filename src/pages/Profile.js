@@ -3,7 +3,9 @@ import Posts from '../component/Posts';
 import Profiles from '../component/Profile';
 import image from '../assets/bg.jpg';
 import { IoMdAdd } from 'react-icons/io';
+import Modal from '../component/Modal';
 const Profile = () => {
+    const [postsModal, setPostsModal] = useState(false);
     const menus = [
         {
             name: 'Profile',
@@ -38,12 +40,17 @@ const Profile = () => {
                             </p>
                         </div>
                         <div className='absolute bottom-3 right-3'>
-                            <button className='rounded-full shadow-xl px-4 py-2 flex items-center gap-3 text-xl text-gray-50 bg-cyan-600 select-none'>
+                            <button className='rounded-full shadow-xl px-4 py-2 flex items-center gap-3 text-xl text-gray-50 bg-cyan-600 select-none' onClick={() => setPostsModal(!postsModal)}>
                                 <span className='text-gray-50 text-2xl'><IoMdAdd /></span>
                                 Add New Post
                             </button>
                         </div>
                     </div>
+                    {postsModal && <Modal
+                        postsModal={postsModal}
+                        setPostsModal={setPostsModal}
+                    />}
+
                     <div className="flex items-center mt-6 shadow-lg">
                         {menus.map((menu, index) => (
                             <div onClick={() => setShow(menu.link)} key={index} className={` px-2 py-2 ${show === menu.link ? "shadow-xl border-b-2 border-gray-900 text-gray-900" : "text-gray-500 cursor-pointer"} select-none`}>
