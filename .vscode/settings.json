@@ -1,0 +1,16 @@
+{
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "emmet.syntaxProfiles": {
+        "javascriptreact": {
+            "tag_case": "lower",
+            "tag_nl": "1",
+            "attr_case": "lower",
+            "attr_nl": "1",
+            "attr_quotes": "double",
+            "css_level": "CSS3.0",
+            "js_level": "ES6"
+        }
+    },
+}
