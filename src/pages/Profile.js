@@ -4,6 +4,7 @@ import Profiles from '../component/Profile';
 import image from '../assets/bg.jpg';
 import { IoMdAdd } from 'react-icons/io';
 import Modal from '../component/Modal';
+import AllPost from '../component/AllPost';
 const Profile = () => {
     const [postsModal, setPostsModal] = useState(false);
     const menus = [
@@ -14,6 +15,10 @@ const Profile = () => {
         {
             name: 'Posts',
             link: 'posts'
+        },
+        {
+            name: 'All Post',
+            link: 'allpost'
         }
     ]
     const stylesbackground = {
@@ -61,6 +66,7 @@ const Profile = () => {
                     <div className='mt-4'>
                         {show === "profile" && <Profiles />}
                         {show === "posts" && <Posts />}
+                        {show === "allpost" && <AllPost />}
                     </div>
                 </div>
             </div>
