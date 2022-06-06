@@ -1,0 +1,30 @@
+import { GET_POSTS_FAILURE, GET_POSTS_REQUEST, GET_POSTS_SUCCESS } from "../constants/postsConstants"
+
+const initialState = {
+    posts: [],
+    isLoading: false,
+    error: null
+}
+export const postsReducer = (state = initialState, action) => {
+    switch (action.type) {
+        case GET_POSTS_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case GET_POSTS_SUCCESS:
+            return {
+                ...state,
+                posts: action.payload,
+                loading: false
+            }
+        case GET_POSTS_FAILURE:
+            return {
+                ...state,
+                error: action.payload,
+                loading: false
+            }
+        default:
+            return state;
+    }
+}
