@@ -5,8 +5,8 @@ import image from '../assets/bg.jpg';
 import { IoMdAdd } from 'react-icons/io';
 import Modal from '../component/Modal';
 import AllPost from '../component/AllPost';
-const Profile = () => {
-    const [postsModal, setPostsModal] = useState(false);
+const Profile = ({postsModal, setPostsModal}) => {
+    
     const menus = [
         {
             name: 'Profile',
@@ -15,10 +15,6 @@ const Profile = () => {
         {
             name: 'Posts',
             link: 'posts'
-        },
-        {
-            name: 'All Post',
-            link: 'allpost'
         }
     ]
     const stylesbackground = {
@@ -31,7 +27,7 @@ const Profile = () => {
     return (
         <div>
             <div className="container mx-auto px-4">
-                <div className='w-full mx-auto max-w-[650px]'>
+                <div className='w-full mx-auto max-w-[700px]'>
                     <div style={stylesbackground} className='h-60 w-full rounded-2xl rounded-bl-full relative'>
                         <div className='rounded-full w-36  shadow-xl shadow-[#d6d4f9] overflow-hidden absolute bottom-0 left-0 h-36'>
                             <img className='min-h-full min-w-full' src="https://t4.ftcdn.net/jpg/03/64/21/11/360_F_364211147_1qgLVxv1Tcq0Ohz3FawUfrtONzz8nq3e.jpg" alt="" />
@@ -66,7 +62,6 @@ const Profile = () => {
                     <div className='mt-4'>
                         {show === "profile" && <Profiles />}
                         {show === "posts" && <Posts />}
-                        {show === "allpost" && <AllPost />}
                     </div>
                 </div>
             </div>

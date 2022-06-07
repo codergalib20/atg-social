@@ -2,25 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { BiHomeAlt } from 'react-icons/bi';
 import { CgProfile } from 'react-icons/cg';
-import { Link } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Profile from './Profile';
 const Main = () => {
+    const [postsModal, setPostsModal] = useState(false);
     const [showPage, setShowPage] = useState("Home")
-    const token = localStorage.getItem("minisocial_token")
-    const callAboutPage = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/api/auth/profile", {
-                headers: { Authorization: "Bearer " + token },
-            });
-            console.log(response);
-        } catch (err) {
-            console.error({ err })
-        }
-    }
-
-
-    useEffect(() => {
-        callAboutPage()
-    }, []);
+    
     const menues = [
         {
             name: "Home",
@@ -51,7 +39,12 @@ const Main = () => {
                     </div>
                 </div>
             </div>
-            <div></div>
+            <div>
+                <Routes>
+                    <Route path="/" element={<Home postsModal={postsModal} setPostsModal={setPostsModal} />} />
+                    <Route path="profile" element={<Profile postsModal={postsModal} setPostsModal={setPostsModal} />} />
+                </Routes>
+            </div>
         </div>
     );
 };

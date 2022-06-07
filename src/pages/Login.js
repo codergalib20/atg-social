@@ -13,7 +13,7 @@ const Login = () => {
             const response = await axios.post('http://localhost:5000/api/auth/signin', data);
             console.log(response?.data);
             localStorage.setItem("minisocial_token", response?.data?.token);
-            location("/main")
+            location("/")
             alert("Logged in successfully");
         } catch (err) {
             setErrors(err.response.data);

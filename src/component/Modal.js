@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { AiOutlineClose } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { AuthContext } from '../App';
 const Modal = ({ postsModal, setPostsModal }) => {
+    const value = useContext(AuthContext);
+    console.log(value);
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async data => {
+        data.username = value.username;
         const formData = new FormData();
         formData.append("file", data?.image[0]);
         formData.append("upload_preset", "jsjb2bic");
