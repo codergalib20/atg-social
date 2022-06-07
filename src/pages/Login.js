@@ -4,12 +4,15 @@ import { useForm } from "react-hook-form";
 
 import image from '../assets/login.gif';
 const Login = () => {
+    const token = localStorage.getItem("minisocial_token");
+    console.log(token);
     const [error, setErrors] = useState({});
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async data => {
         try {
             const response = await axios.post('http://localhost:5000/api/auth/signin', data);
             console.log(response?.data);
+            localStorage.setItem("minisocial_token", response?.data?.token);
         } catch (err) {
             setErrors(err.response.data);
         }
