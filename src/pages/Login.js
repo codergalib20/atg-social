@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
 
 import image from '../assets/login.gif';
 const Login = () => {
-    const token = localStorage.getItem("minisocial_token");
-    console.log(token);
+    const location = useNavigate()
     const [error, setErrors] = useState({});
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async data => {
@@ -13,6 +13,8 @@ const Login = () => {
             const response = await axios.post('http://localhost:5000/api/auth/signin', data);
             console.log(response?.data);
             localStorage.setItem("minisocial_token", response?.data?.token);
+            location("/main")
+            alert("Logged in successfully");
         } catch (err) {
             setErrors(err.response.data);
         }

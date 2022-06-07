@@ -45,18 +45,17 @@ const Register = () => {
             let result28 = result27.replaceAll(">", "");
             let result29 = result28.replaceAll("?", "");
             let result30 = result29.replaceAll("~", "");
-            let result31 = result30.replaceAll("`", "").toLowerCase();
+            let result31 = result30.replaceAll("`", "")?.toLowerCase()?.slice(0, 10);
             const number = Math.floor(Math.random(1000) * 2000);
             let username = result31 + number;
             setThisUserName(username);
-            console.log(username);
+            
         }
     }
     const handleCopyUsername = () => {
         navigator.clipboard.writeText(thisUserName);
         alert("Copied to clipboard");
     }
-
     const onSubmit = async data => {
         try {
             if (!thisUserName) {
