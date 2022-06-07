@@ -4,42 +4,137 @@ import { BsThreeDots } from 'react-icons/bs';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
 import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md';
+import { GoComment } from 'react-icons/go'
+import { motion } from 'framer-motion';
 const Post = ({ post }) => {
     const [showtext, setShowText] = useState(false)
+    const [comment, setComment] = useState("");
     const show = post?.description?.slice(0, 60)
-    const showAll = post?.description
+    const showAll = post?.description;
+    const handleSubmitComment = async (e) => {
+        e.preventDefault();
+        if (!comment) {
+            alert("Please add something!")
+        } else {
+            // await fetch(`http://localhost:5000/api/post/comment/${post._id}`, {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json",
+            //         "Authorization": `Bearer ${localStorage.getItem("token")}`
+            //     },
+            //     body: JSON.stringify({
+            //         comment
+            //     })
+            // })
+            setComment("")
+        }
+    }
     return (
         <div>
             <div className='shadow-md px-4 my-6 border-t-4 border-cyan-600 rounded-lg'>
                 <div className='py-2 flex items-center justify-end gap-4 border-b-2 border-gray-400 mb-3'>
-                    <span className='text-3xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-cyan-200 transition-all duration-150 ease-linear'>
+                    <motion.div
+                        whileTap={{
+                            scale: 1.3,
+                            transition: {
+                                duration: 0.1,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
                         <AiTwotoneDelete />
-                    </span>
-                    <span className='text-3xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-cyan-200 transition-all duration-150 ease-linear'>
+                    </motion.div>
+                    <motion.div
+                        whileTap={{
+                            scale: 1.3,
+                            transition: {
+                                duration: 0.1,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
                         <FaEdit />
-                    </span>
-                    <span className='text-3xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-cyan-200 transition-all duration-150 ease-linear'>
+                    </motion.div>
+                    <motion.div
+                        whileTap={{
+                            scale: 1.3,
+                            transition: {
+                                duration: 0.1,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
                         <BsThreeDots />
-                    </span>
-                    <span className='text-3xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-cyan-200 transition-all duration-150 ease-linear'>
+                    </motion.div>
+                    <motion.div
+                        whileTap={{
+                            scale: 1.3,
+                            transition: {
+                                duration: 0.1,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
                         <BsThreeDots />
-                    </span>
+                    </motion.div>
                 </div>
                 <div>
                     <h2 className='text-2xl font-medium text-gray-800'>{post?.title}</h2>
 
                     {post?.description.length > 60 ? (
-                        <p className='gap-3 py-3'>{!showtext ? show + " " : showAll + " "}
-                            {!showtext ? <div className='inline'> ... <button onClick={() => setShowText(!showtext)}>see more.</button></div>
+                        <p className='gap-3 py-3 text-gray-500'>{!showtext ? show + " " : showAll + " "}
+                            {!showtext ? <div className='inline'> ... <button className='text-gray-900' onClick={() => setShowText(!showtext)}>see more.</button></div>
                                 :
-                                <div className='inline'><button onClick={() => setShowText(!showtext)}>...hide more <span className='inline'><BiHide className='inline' /></span></button></div>}
+                                <div className='inline'><button className='text-gray-900' onClick={() => setShowText(!showtext)}>...show less <span className='inline'><BiHide className='inline' /></span></button></div>}
                         </p>
                     ) : <p>{showAll}</p>}
                     <img src={post?.image} alt={post.title} />
                 </div>
                 <div className='flex items-center justify-end gap-4 py-2'>
-                    <span className='text-3xl text-gray-600'><MdOutlineFavoriteBorder /></span>
-                    <span className='text-3xl text-red-600'><MdFavorite /></span>
+                    <motion.div whileTap={{
+                        scale: 1.3,
+                        transition: {
+                            duration: 0.1,
+                            ease: "easeInOut"
+                        }
+                    }} className='text-3xl text-gray-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdOutlineFavoriteBorder /></motion.div>
+                    <motion.div
+                        whileTap={{
+                            scale: 1.3,
+                            transition: {
+                                duration: 0.1,
+                                ease: "easeInOut"
+                            }
+                        }}
+                        className='text-3xl text-red-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdFavorite /></motion.div>
+                </div>
+                {/* Here show comment box */}
+                <div className='pb-3'>
+                    <form onSubmit={handleSubmitComment}>
+                        <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
+                            <div className="py-2 px-4 bg-white rounded-t-lg dark:bg-gray-800">
+                                <label htmlFor="comment" className="sr-only">Your comment</label>
+                                <textarea value={comment} onChange={e => setComment(e.target.value)} id="comment" rows="4" className="p-2 w-full text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required=""></textarea>
+                            </div>
+                            <div className="flex justify-between items-center py-2 px-3 border-t dark:border-gray-600">
+                                <button type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                    Post comment
+                                </button>
+                                <div className="flex pl-0 space-x-1 sm:pl-2">
+                                    <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                    <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                    <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {/* <p className="ml-auto text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Community Guidelines</a>.</p> */}
                 </div>
             </div>
         </div>

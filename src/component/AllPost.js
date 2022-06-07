@@ -18,7 +18,7 @@ const AllPost = () => {
                 )
             }
             {posts &&
-                <div>
+                <div className='px-4 pb-20'>
                     {posts.map((post, index) => <Post post={post} key={index} />)}
                 </div>
             }

@@ -14,7 +14,7 @@ export const postsReducer = (state = initialState, action) => {
             }
         case GET_POSTS_SUCCESS:
             return {
-                ...state,
+                error: null,
                 posts: action.payload,
                 isLoading: false
             }

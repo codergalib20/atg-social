@@ -1,14 +1,20 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import image from '../assets/login.gif';
 const Register = () => {
-    const [error, setErrors] = useState({});
+    const [userName, setUserName] = useState('');
+    const [thisUserName, setThisUserName] = useState("");
+    const location = useNavigate()
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const onSubmit = async data => {
-        try {
-            console.log(data);
-            let generator = data.name
+    // Generate User name
+    const generateUserName = () => {
+        if (!userName) {
+            alert("Please enter your name");
+            return;
+        } else {
+            let generator = userName
             let result = generator.replaceAll(" ", "");
             let result2 = result.replaceAll('"', "");
             let result3 = result2.replaceAll("'", "");
@@ -42,17 +48,40 @@ const Register = () => {
             let result31 = result30.replaceAll("`", "").toLowerCase();
             const number = Math.floor(Math.random(1000) * 2000);
             let username = result31 + number;
+            setThisUserName(username);
             console.log(username);
-            const response = await axios.post('http://localhost:5000/api/auth/signup', {
-                username: username,
-                password: data.password,
-                name: data.name,
-                email: data.email,
-                avatar: "https://i.pravatar.cc/300"
-            })
-            console.log(response);
+        }
+    }
+    const handleCopyUsername = () => {
+        navigator.clipboard.writeText(thisUserName);
+        alert("Copied to clipboard");
+    }
+
+    const onSubmit = async data => {
+        try {
+            if (!thisUserName) {
+                alert("Please generate and copy a username before submitting");
+                return;
+            } else {
+                console.log(data);
+                const response = await axios.post('http://localhost:5000/api/auth/signup', {
+                    username: thisUserName,
+                    password: data.password,
+                    name: userName,
+                    email: data.email,
+                    avatar: ""
+                })
+                if (response.status === 201) {
+                    alert("Successfully Registered");
+                    console.log(response);
+                    location("/login");
+                }
+            }
         } catch (err) {
-            setErrors(err.response.data.error);
+            if (err.response.data.error === "User already exist") {
+                alert("User already exist");
+                return
+            }
         }
     };
     return (
@@ -62,20 +91,40 @@ const Register = () => {
                     <div>
                         <img src={image} alt="Login Page images" />
                     </div>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div>
-                            <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                    <div>
+                        <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                            {
+                                thisUserName && <div className="mb-4">
+                                    <span className='tooltip' onClick={() => handleCopyUsername()}
+                                    >{thisUserName}
+                                        <span className='tooltip-body'>Copy to click on username</span>
+                                    </span>
+                                    <div>
+                                        <button title='Click on this button for generate new username' onClick={() => generateUserName()}
+                                            data-tooltip-target="tooltip-hover" data-tooltip-trigger="hover" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                        >
+                                            Make New Username
+                                        </button>
+                                        <div id="tooltip-hover" role="tooltip" class="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                                            Tooltip content
+                                            <div class="tooltip-arrow" data-popper-arrow></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }{
+                                !thisUserName && <div className="mb-4">
+                                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                        onClick={() => generateUserName()}>Make Username
+                                    </button>
+                                </div>
+                            }
+                            <label className="block text-gray-700 text-md font-bold mb-1 mt-3" htmlFor="name">
+                                Full Name
+                            </label>
+                            <input onChange={e => setUserName(e.target.value)} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name"
+                            />
+                            <form onSubmit={handleSubmit(onSubmit)}>
                                 <div className="mb-4">
-                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="file"
-                                        accept='.jpg, .jpeg, .png'
-                                        {...register("image", { required: true })}
-                                    />
-                                    <label className="block text-gray-700 text-md font-bold mb-1 mt-3" htmlFor="name">
-                                        Full Name
-                                    </label>
-                                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="name" type="text" placeholder="Full Name"
-                                        {...register("name", { required: true })}
-                                    />
                                     <label className="block text-gray-700 text-md font-bold mt-3" htmlFor="email">
                                         Email
                                     </label>
@@ -91,9 +140,9 @@ const Register = () => {
                                     />
                                     <button onClick={handleSubmit} className="bg-[#407bff] py-2 px-5 border-2 border-white shadow-lg mt-4 text-white" >Register</button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

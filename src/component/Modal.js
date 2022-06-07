@@ -33,7 +33,7 @@ const Modal = ({ postsModal, setPostsModal }) => {
             )
     }
     return (
-        <div className='h-screen w-screen bg-rgbawhite fixed top-0 left-0 flex items-center justify-center'>
+        <div className='h-screen w-screen bg-rgbawhite fixed top-0 left-0 flex items-center justify-center px-2 '>
             <motion.div
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}
