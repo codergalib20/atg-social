@@ -2,7 +2,6 @@ import React, { createContext, useEffect, useState } from 'react';
 import Login from './pages/Login';
 import 'react-notifications/lib/notifications.css';
 import Register from './pages/Register';
-import Profile from './pages/Profile';
 import { Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
 import axios from 'axios';
@@ -13,7 +12,7 @@ const App = () => {
   const token = localStorage.getItem("minisocial_token")
   const callAboutPage = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/profile", {
+      const response = await axios.get("https://sheltered-meadow-26881.herokuapp.com/api/auth/profile", {
         headers: { Authorization: "Bearer " + token },
       });
       setUser(response?.data?.userData);

@@ -63,7 +63,7 @@ const Register = () => {
                 return;
             } else {
                 console.log(data);
-                const response = await axios.post('http://localhost:5000/api/auth/signup', {
+                const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signup', {
                     username: thisUserName,
                     password: data.password,
                     name: userName,

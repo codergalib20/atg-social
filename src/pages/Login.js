@@ -10,7 +10,7 @@ const Login = () => {
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async data => {
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/signin', data);
+            const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signin', data);
             console.log(response?.data);
             localStorage.setItem("minisocial_token", response?.data?.token);
             location("/")

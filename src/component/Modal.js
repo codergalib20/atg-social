@@ -26,10 +26,11 @@ const Modal = ({ postsModal, setPostsModal }) => {
         )
             .then((res) => {
                 data.image = res.data.secure_url;
-                axios.post('http://localhost:5000/api/posts/post', data)
+                axios.post('https://sheltered-meadow-26881.herokuapp.com/api/posts/post', data)
                     .then(response => {
                         console.log(response);
                         setPostsModal(false);
+                        alert('Post created successfully');
                     }).catch(err => {
                         console.log(err);
                     })
@@ -77,7 +78,7 @@ const Modal = ({ postsModal, setPostsModal }) => {
                         </div>
                         <div className="flex items-center justify-end py-2 border-t-2 border-cyan-800 mt-3">
                             <button type="submit" className="text-white bg-cyan-700 hover:bg-cyan-800 focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800">
-                                Choose plan
+                                Create
                                 <svg className="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                             </button>
                         </div>
