@@ -21,6 +21,7 @@
     "redux": "^4.2.0",
     "redux-thunk": "^2.4.1",
     "sweetalert2": "^11.4.17",
+    "timeago-react": "^3.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
