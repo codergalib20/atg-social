@@ -8,6 +8,9 @@ import { AiOutlineClose } from 'react-icons/ai'
 import { motion } from 'framer-motion';
 import { AuthContext, MainContext } from '../../App';
 import Comment from './Comment';
+import moment from "moment";
+
+
 const Post = ({ post }) => {
     const [showtext, setShowText] = useState(false)
     const [comment, setComment] = useState("");
@@ -111,16 +114,21 @@ const Post = ({ post }) => {
                 </div>}
                     <div>
                         <div className='pt-4'>
-                            <h2 className='text-2xl font-medium text-gray-800'>{post?.title}</h2>
+                            <h2 className='text-2xl font-medium text-gray-800 relative'>{post?.title}
+                                <br />
+                                <span className='text-sm text-gray-500 absolute -bottom-3 left-4'> {moment(post?.date).format("DD MMM YYYY")}</span>
+                            </h2>
 
                             {post?.description?.length > 60 ? (
-                                <p className='gap-3 py-3 text-gray-500'>{!showtext ? show + " " : showAll + " "}
+                                <p className='gap-3 py-3  text-gray-500'>{!showtext ? show + " " : showAll + " "}
                                     {!showtext ? <div className='inline'> ... <button className='text-gray-900' onClick={() => setShowText(!showtext)}>see more.</button></div>
                                         :
                                         <div className='inline'><button className='text-gray-900' onClick={() => setShowText(!showtext)}>...show less <span className='inline'><BiHide className='inline' /></span></button></div>}
                                 </p>
-                            ) : <p>{showAll}</p>}
-                            <img src={post?.image} alt={post.title} />
+                            ) : <p className='py-3'>{showAll}</p>}
+                            <div className='border-y border-cyan-400'>
+                                <img src={post?.image} alt={post.title} />
+                            </div>
                         </div>
                         <div className='flex items-center justify-end gap-4 py-2'>
                             <motion.div whileTap={{
@@ -140,13 +148,25 @@ const Post = ({ post }) => {
                                 }}
                                 className='text-3xl text-red-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdFavorite /></motion.div>
                         </div>
+                        {/* Here is Comment Show */}
+                        <div className='py-2 px-2'>
+                            <div>
+                                {
+                                    filterComments.map((comment, index) => (
+                                        <div key={index}>
+                                            <Comment comment={comment} />
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
                         {/* Here show comment box */}
                         <div className='pb-3'>
                             <div >
                                 <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                                     <div className="py-2 px-4 bg-white rounded-t-lg dark:bg-gray-800">
                                         <label htmlFor="comment" className="sr-only">Your comment</label>
-                                        <textarea value={comment} onChange={e => setComment(e.target.value)} id="comment" rows="4" className="p-2 w-full text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required=""></textarea>
+                                        <textarea value={comment} onChange={e => setComment(e.target.value)} id="comment" rows="2" className="p-2 w-full text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required=""></textarea>
                                     </div>
                                     <div className="flex justify-between items-center py-2 px-3 border-t dark:border-gray-600">
                                         <button
@@ -154,7 +174,7 @@ const Post = ({ post }) => {
                                             type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-cyan-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-cyan-900 hover:bg-cyan-800">
                                             Post comment
                                         </button>
-                                        <div className="flex pl-0 space-x-1 sm:pl-2">
+                                        {/* <div className="flex pl-0 space-x-1 sm:pl-2">
                                             <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M8 4a3 3 0 00-3 3v4a5 5 0 0010 0V7a1 1 0 112 0v4a7 7 0 11-14 0V7a5 5 0 0110 0v4a3 3 0 11-6 0V7a1 1 0 012 0v4a1 1 0 102 0V7a3 3 0 00-3-3z" clipRule="evenodd"></path></svg>
                                             </button>
@@ -165,19 +185,8 @@ const Post = ({ post }) => {
                                                 type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
                                             </button>
-                                        </div>
+                                        </div> */}
                                     </div>
-                                </div>
-                            </div>
-                            <div className='py-2 px-2'>
-                                <div>
-                                    {
-                                        filterComments.map((comment, index) => (
-                                            <div key={index}>
-                                                <Comment comment={comment} />
-                                            </div>
-                                        ))
-                                    }
                                 </div>
                             </div>
                             {/* <p className="ml-auto text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Community Guidelines</a>.</p> */}
