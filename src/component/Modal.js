@@ -6,7 +6,6 @@ import axios from 'axios';
 import { AuthContext } from '../App';
 const Modal = ({ postsModal, setPostsModal }) => {
     const value = useContext(AuthContext);
-    console.log(value);
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
     const onSubmit = async data => {
         data.username = value.username;
@@ -28,7 +27,6 @@ const Modal = ({ postsModal, setPostsModal }) => {
                 data.image = res.data.secure_url;
                 axios.post('https://sheltered-meadow-26881.herokuapp.com/api/posts/post', data)
                     .then(response => {
-                        console.log(response);
                         setPostsModal(false);
                         alert('Post created successfully');
                     }).catch(err => {

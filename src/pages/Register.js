@@ -62,7 +62,6 @@ const Register = () => {
                 alert("Please generate and copy a username before submitting");
                 return;
             } else {
-                console.log(data);
                 const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signup', {
                     username: thisUserName,
                     password: data.password,
@@ -72,7 +71,6 @@ const Register = () => {
                 })
                 if (response.status === 201) {
                     alert("Successfully Registered");
-                    console.log(response);
                     location("/login");
                 }
             }

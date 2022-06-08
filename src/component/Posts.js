@@ -11,7 +11,6 @@ const PostPage = () => {
     }, [])
     const value = useContext(AuthContext);
     const myposts = posts.filter(post => post?.username === value?.username);
-    console.log(myposts)
     return (
         <div>
             {

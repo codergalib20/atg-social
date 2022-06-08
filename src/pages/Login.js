@@ -11,7 +11,6 @@ const Login = () => {
     const onSubmit = async data => {
         try {
             const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signin', data);
-            console.log(response?.data);
             localStorage.setItem("minisocial_token", response?.data?.token);
             location("/")
             alert("Logged in successfully");

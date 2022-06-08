@@ -1,36 +1,39 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react';
 import { BiHide } from 'react-icons/bi';
-import { BsThreeDots } from 'react-icons/bs';
 import { AiTwotoneDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
 import { MdOutlineFavoriteBorder, MdFavorite } from 'react-icons/md';
-import { GoComment } from 'react-icons/go'
 import { AiOutlineClose } from 'react-icons/ai'
 import { motion } from 'framer-motion';
-import { AuthContext } from '../../App';
+import { AuthContext, MainContext } from '../../App';
+import Comment from './Comment';
 const Post = ({ post }) => {
     const [showtext, setShowText] = useState(false)
     const [comment, setComment] = useState("");
     const show = post?.description?.slice(0, 60)
     const showAll = post?.description;
     const value = useContext(AuthContext);
+    const { comments, setComments } = useContext(MainContext);
+    // https://sheltered-meadow-26881.herokuapp.com/api/comments/single/
     const handleSubmitComment = async (e) => {
-        e.preventDefault();
-        if (!comment) {
-            alert("Please add something!")
-        } else {
-            // await fetch(`http://localhost:5000/api/post/comment/${post._id}`, {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //         "Authorization": `Bearer ${localStorage.getItem("token")}`
-            //     },
-            //     body: JSON.stringify({
-            //         comment
-            //     })
-            // })
-            setComment("")
+        try {
+            let body = {
+                comment: comment,
+                postId: e,
+                username: value?.username,
+                userImage: value?.avatar,
+            }
+            if (!comment) {
+                alert("Please add something!")
+            } else {
+                const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/comments', body)
+                setComment("")
+                setComments([...comments, response?.data?.comment])
+            }
+        }
+        catch (err) {
+            console.log(err)
         }
     }
     const handleDeletePost = async (id) => {
@@ -57,7 +60,6 @@ const Post = ({ post }) => {
         const field = e.target.name;
         setEditText({ ...editText, [field]: value })
     }
-    console.log(editText?.title);
     const handleSubmitForm = (e) => {
         if (!editText.title || !editText.description) {
             alert("Please Change something!")
@@ -69,7 +71,6 @@ const Post = ({ post }) => {
                 if (response?.statusText === "OK") {
                     alert("Post updated!")
                     setEdit(null)
-                    console.log(response)
                 }
             }
             ).catch(err => {
@@ -78,6 +79,7 @@ const Post = ({ post }) => {
             )
         }
     }
+    const filterComments = comments.filter(comment => comment.postId === post._id)
     return (
         <div>
             <div className='shadow-md px-4 my-6 border-t-4 border-cyan-600 rounded-lg'>
@@ -105,28 +107,6 @@ const Post = ({ post }) => {
                         }}
                         className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
                         <FaEdit />
-                    </motion.div>
-                    <motion.div
-                        whileTap={{
-                            scale: 1.3,
-                            transition: {
-                                duration: 0.1,
-                                ease: "easeInOut"
-                            }
-                        }}
-                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
-                        <BsThreeDots />
-                    </motion.div>
-                    <motion.div
-                        whileTap={{
-                            scale: 1.3,
-                            transition: {
-                                duration: 0.1,
-                                ease: "easeInOut"
-                            }
-                        }}
-                        className='text-2xl cursor-pointer w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-all duration-150 ease-linear'>
-                        <BsThreeDots />
                     </motion.div>
                 </div>}
                     <div>
@@ -162,14 +142,16 @@ const Post = ({ post }) => {
                         </div>
                         {/* Here show comment box */}
                         <div className='pb-3'>
-                            <form onSubmit={handleSubmitComment}>
+                            <div >
                                 <div className="mb-4 w-full bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-700 dark:border-gray-600">
                                     <div className="py-2 px-4 bg-white rounded-t-lg dark:bg-gray-800">
                                         <label htmlFor="comment" className="sr-only">Your comment</label>
                                         <textarea value={comment} onChange={e => setComment(e.target.value)} id="comment" rows="4" className="p-2 w-full text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a comment..." required=""></textarea>
                                     </div>
                                     <div className="flex justify-between items-center py-2 px-3 border-t dark:border-gray-600">
-                                        <button type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
+                                        <button
+                                            onClick={() => handleSubmitComment(post._id)}
+                                            type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-cyan-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-cyan-900 hover:bg-cyan-800">
                                             Post comment
                                         </button>
                                         <div className="flex pl-0 space-x-1 sm:pl-2">
@@ -179,13 +161,25 @@ const Post = ({ post }) => {
                                             <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path></svg>
                                             </button>
-                                            <button type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+                                            <button
+                                                type="button" className="inline-flex justify-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                                                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd"></path></svg>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                            <div className='py-2 px-2'>
+                                <div>
+                                    {
+                                        filterComments.map((comment, index) => (
+                                            <div key={index}>
+                                                <Comment comment={comment} />
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
                             {/* <p className="ml-auto text-xs text-gray-500 dark:text-gray-400">Remember, contributions to this topic should follow our <a href="#" className="text-blue-600 dark:text-blue-500 hover:underline">Community Guidelines</a>.</p> */}
                         </div>
                     </div>
