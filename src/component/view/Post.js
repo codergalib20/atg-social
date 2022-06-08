@@ -14,16 +14,21 @@ import Swal from 'sweetalert2';
 
 
 const Post = ({ post }) => {
+    const [postss, setPostss] = useState(post);
+    console.log(postss);
     const [showtext, setShowText] = useState(false)
     const [comment, setComment] = useState("");
-    const show = post?.description?.slice(0, 60)
-    const showAll = post?.description;
+    const show = postss?.description?.slice(0, 60)
+    const showAll = postss?.description;
     const value = useContext(AuthContext);
     const { comments, setComments, users } = useContext(MainContext);
-    const findUser = users.find(user => user?.username === post?.username);
+    const findUser = users.find(user => user?.username === postss?.username);
     const makeAvatar = findUser?.name?.charAt(0)?.toUpperCase();
     const color = selectColor(makeAvatar);
     const colo = color?.bg;
+    const [edit, setEdit] = useState(null);
+    const [editText, setEditText] = useState({ title: "", description: "" })
+    const token = localStorage.getItem("minisocial_token");
     const handleSubmitComment = async (e) => {
         try {
             let body = {
@@ -73,8 +78,7 @@ const Post = ({ post }) => {
             console.log(err)
         })
     }
-    const [edit, setEdit] = useState(null);
-    const [editText, setEditText] = useState({ title: "", description: "" })
+
     const handleChangeEdit = (e) => {
         const value = e.target.value;
         const field = e.target.name;
@@ -91,7 +95,7 @@ const Post = ({ post }) => {
             })
             return
         } else {
-            axios.patch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/update/post/${post._id}`, {
+            axios.patch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/update/post/${postss._id}`, {
                 title: editText?.title,
                 description: editText.description
             }).then(response => {
@@ -112,7 +116,30 @@ const Post = ({ post }) => {
             )
         }
     }
-    const filterComments = comments.filter(comment => comment.postId === post._id)
+    const filterComments = comments.filter(comment => comment.postId === postss._id);
+    const likePost = async (id) => {
+        await fetch(`http://localhost:5000/api/posts/like/post`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data?.message === "liked") {
+                    console.log(data?.result)
+                    setPostss({ ...postss, likes: data?.result?.likes })
+                }
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
     return (
         <div>
             <div className='shadow-md px-4 my-6 border-t-4 border-cyan-600 rounded-lg'>
@@ -130,12 +157,12 @@ const Post = ({ post }) => {
                         </div>
                         <div className='relative'>
                             <h1 className='text-2xl font-medium text-cyan-900'>{findUser?.name}</h1>
-                            <span className='text-sm text-gray-500 absolute -bottom-4 left-0'> {moment(post?.date).format("DD MMM YYYY")}</span>
+                            <span className='text-sm text-gray-500 absolute -bottom-4 left-0'> {moment(postss?.date).format("DD MMM YYYY")}</span>
                         </div>
                     </div>
-                    {post?.username === value?.username && <div className='flex items-center gap-4'>
+                    {postss?.username === value?.username && <div className='flex items-center gap-4'>
                         <motion.div
-                            onClick={() => handleDeletePost(post._id)}
+                            onClick={() => handleDeletePost(postss._id)}
                             whileTap={{
                                 scale: 1.3,
                                 transition: {
@@ -147,7 +174,7 @@ const Post = ({ post }) => {
                             <AiTwotoneDelete />
                         </motion.div>
                         <motion.div
-                            onClick={() => setEdit(post)}
+                            onClick={() => setEdit(postss)}
                             whileTap={{
                                 scale: 1.3,
                                 transition: {
@@ -162,10 +189,10 @@ const Post = ({ post }) => {
                 </div>
                     <div>
                         <div className='pt-4'>
-                            <h2 className='text-2xl font-medium text-gray-800 relative'>{post?.title}
+                            <h2 className='text-2xl font-medium text-gray-800 relative'>{postss?.title}
                             </h2>
 
-                            {post?.description?.length > 60 ? (
+                            {postss?.description?.length > 60 ? (
                                 <p className='gap-3 py-3  text-gray-500'>{!showtext ? show + " " : showAll + " "}
                                     {!showtext ? <div className='inline'> ... <button className='text-gray-900' onClick={() => setShowText(!showtext)}>see more.</button></div>
                                         :
@@ -173,17 +200,23 @@ const Post = ({ post }) => {
                                 </p>
                             ) : <p className='py-3'>{showAll}</p>}
                             <div className='border-y border-cyan-400'>
-                                <img src={post?.image} alt={post.title} />
+                                <img src={postss?.image} alt={postss.title} />
                             </div>
                         </div>
                         <div className='flex items-center justify-end gap-4 py-2'>
-                            <motion.div whileTap={{
-                                scale: 1.3,
-                                transition: {
-                                    duration: 0.1,
-                                    ease: "easeInOut"
-                                }
-                            }} className='text-3xl text-gray-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdOutlineFavoriteBorder /></motion.div>
+                            <div>
+                                <span className='text-md font-medium text-cyan-800'> {(postss?.likes?.length > 0) && (postss?.likes?.length > 9 ? (postss?.likes?.length + " Likes") : (postss?.likes?.length + " Like"))}
+                                </span>
+                            </div>
+                            <motion.div
+                                onClick={() => likePost(postss._id)}
+                                whileTap={{
+                                    scale: 1.3,
+                                    transition: {
+                                        duration: 0.1,
+                                        ease: "easeInOut"
+                                    }
+                                }} className='text-3xl text-gray-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdOutlineFavoriteBorder /></motion.div>
                             <motion.div
                                 whileTap={{
                                     scale: 1.3,
@@ -216,7 +249,7 @@ const Post = ({ post }) => {
                                     </div>
                                     <div className="flex justify-between items-center py-2 px-3 border-t dark:border-gray-600">
                                         <button
-                                            onClick={() => handleSubmitComment(post._id)}
+                                            onClick={() => handleSubmitComment(postss._id)}
                                             type="submit" className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-cyan-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-cyan-900 hover:bg-cyan-800">
                                             Post comment
                                         </button>

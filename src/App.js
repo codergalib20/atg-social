@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React, { createContext, useEffect, useState } from 'react';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -60,19 +61,22 @@ const App = () => {
   useEffect(() => {
     callUsers()
   }, [])
+  const navigate = useNavigate();
   return (
     <AuthContext.Provider value={user}>
       <MainContext.Provider value={{ comments, setComments, users, newData, setNewData, success, setSucces }}>
         <Routes>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+
           {
             user ? (
               <Route path="/*" element={<Main />} />
             ) : (
-              <Route path="/" element={<Login />} />
+              navigate("/login")
             )
           }
+
         </Routes>
       </MainContext.Provider>
     </AuthContext.Provider>

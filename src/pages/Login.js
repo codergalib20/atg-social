@@ -8,10 +8,11 @@ import image from '../assets/login.gif';
 const Login = () => {
     const location = useNavigate()
     const [error, setErrors] = useState({});
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit} = useForm();
     const onSubmit = async data => {
+        console.log(data);
         try {
-            const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signin', data);
+            const response = await axios.post('http://localhost:5000/api/auth/signin', data);
             localStorage.setItem("minisocial_token", response?.data?.token);
             location("/")
             Swal.fire({
@@ -22,6 +23,7 @@ const Login = () => {
                 timer: 1500
             })
         } catch (err) {
+            console.log(err);
             setErrors(err.response.data);
         }
     };
