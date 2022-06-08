@@ -5,8 +5,8 @@ import image from '../assets/bg.jpg';
 import { IoMdAdd } from 'react-icons/io';
 import Modal from '../component/Modal';
 import AllPost from '../component/AllPost';
-const Profile = ({postsModal, setPostsModal}) => {
-    
+const Profile = ({ postsModal, setPostsModal }) => {
+
     const menus = [
         {
             name: 'Profile',

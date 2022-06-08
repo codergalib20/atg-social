@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import image from '../assets/login.gif';
 const Login = () => {
@@ -13,7 +14,13 @@ const Login = () => {
             const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signin', data);
             localStorage.setItem("minisocial_token", response?.data?.token);
             location("/")
-            alert("Logged in successfully");
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Logged in successfully',
+                showConfirmButton: false,
+                timer: 1500
+            })
         } catch (err) {
             setErrors(err.response.data);
         }

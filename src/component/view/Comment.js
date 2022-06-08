@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { MainContext } from '../../App';
 import { avatarBg, selectColor } from '../../assets/colors';
 import moment from "moment";
-
 const Comment = ({ comment }) => {
     const { users } = useContext(MainContext);
     // console.log(comment)
@@ -14,7 +13,9 @@ const Comment = ({ comment }) => {
         <div>
             <div className="flex justify-between">
                 <div className="flex gap-2 mt-2">
-                    {findUser?.avatar && <img className="rounded-full w-8 h-8" src={findUser?.avatar} alt="avatar" />}
+                    {findUser?.avatar && <div className='w-8 h-8 overflow-hidden rounded-full shadow-lg'>
+                        <img className="rounded-full w-8 h-8" src={findUser?.avatar} alt="avatar" />
+                    </div>}
                     {!findUser?.avatar && (
                         <div style={{ background: `${colo}` }} className={`w-8 h-8 rounded-full overflow-hidden flex items-center justify-center text-white shadow-lg`}>
                             <div className={`text-xl`}>{color?.l}</div>
@@ -22,7 +23,7 @@ const Comment = ({ comment }) => {
                     )}
                     <div className="ml-2 bg-[#f0f2f5] py-1 px-2 rounded-lg">
                         <div className="font-medium text-sm text-cyan-900 pb-2">{findUser?.name}</div>
-                        <div className="text-sm font-normal text-cyan-700">{comment?.comment}</div>
+                        <span className="text-sm font-normal block text-cyan-700 flex-wrap">{comment?.comment}</span>
                     </div>
                 </div>
             </div>

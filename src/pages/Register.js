@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import image from '../assets/login.gif';
 const Register = () => {
     const [userName, setUserName] = useState('');
@@ -11,7 +12,13 @@ const Register = () => {
     // Generate User name
     const generateUserName = () => {
         if (!userName) {
-            alert("Please enter your name");
+            Swal.fire({
+                position: 'top-end',
+                icon: 'warning',
+                title: 'Please enter your name',
+                showConfirmButton: false,
+                timer: 1500
+            })
             return;
         } else {
             let generator = userName
@@ -49,17 +56,29 @@ const Register = () => {
             const number = Math.floor(Math.random(1000) * 2000);
             let username = result31 + number;
             setThisUserName(username);
-            
+
         }
     }
     const handleCopyUsername = () => {
         navigator.clipboard.writeText(thisUserName);
-        alert("Copied to clipboard");
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Copied to clipboard',
+            showConfirmButton: false,
+            timer: 1500
+        })
     }
     const onSubmit = async data => {
         try {
             if (!thisUserName) {
-                alert("Please generate and copy a username before submitting");
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: 'Please generate and copy a username before submitting',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 return;
             } else {
                 const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signup', {
@@ -70,13 +89,25 @@ const Register = () => {
                     avatar: ""
                 })
                 if (response.status === 201) {
-                    alert("Successfully Registered");
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Successfully Registered',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                     location("/login");
                 }
             }
         } catch (err) {
             if (err.response.data.error === "User already exist") {
-                alert("User already exist");
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'User already exist',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
                 return
             }
         }

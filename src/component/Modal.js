@@ -3,10 +3,12 @@ import { useForm } from 'react-hook-form';
 import { AiOutlineClose } from 'react-icons/ai';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-import { AuthContext } from '../App';
+import { AuthContext, MainContext } from '../App';
+import Swal from 'sweetalert2';
 const Modal = ({ postsModal, setPostsModal }) => {
     const value = useContext(AuthContext);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { setNewData, setSucces } = useContext(MainContext);
+    const { register, handleSubmit } = useForm();
     const onSubmit = async data => {
         data.username = value.username;
         const formData = new FormData();
@@ -28,7 +30,15 @@ const Modal = ({ postsModal, setPostsModal }) => {
                 axios.post('https://sheltered-meadow-26881.herokuapp.com/api/posts/post', data)
                     .then(response => {
                         setPostsModal(false);
-                        alert('Post created successfully');
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Post created successfully',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setNewData(response.data?.data);
+                        setSucces("success");
                     }).catch(err => {
                         console.log(err);
                     })
@@ -36,7 +46,7 @@ const Modal = ({ postsModal, setPostsModal }) => {
             )
     }
     return (
-        <div className='h-screen w-screen bg-rgbawhite fixed top-0 left-0 flex items-center justify-center px-2 '>
+        <div className='h-screen w-screen bg-rgbawhite fixed top-0 left-0 flex items-center justify-center px-2 z-50'>
             <motion.div
                 initial={{ opacity: 0, scale: 0.6 }}
                 animate={{ opacity: 1, scale: 1 }}

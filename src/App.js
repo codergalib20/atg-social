@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
 import Login from './pages/Login';
-import 'react-notifications/lib/notifications.css';
 import Register from './pages/Register';
 import { Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
@@ -10,7 +9,9 @@ export const AuthContext = createContext();
 export const MainContext = createContext();
 const App = () => {
   const [user, setUser] = useState(null);
-  const token = localStorage.getItem("minisocial_token")
+  const token = localStorage.getItem("minisocial_token");
+  const [newData, setNewData] = useState({});
+  const [success, setSucces] = useState("");
   // Load Authenticate User---
   const callAboutPage = async () => {
     try {
@@ -46,7 +47,7 @@ const App = () => {
   const [users, setUsers] = useState([]);
   const callUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/users", {
+      const response = await axios.get("https://sheltered-meadow-26881.herokuapp.com/api/auth/users", {
         headers: {
           "Content-Type": "application/json",
         }
@@ -61,7 +62,7 @@ const App = () => {
   }, [])
   return (
     <AuthContext.Provider value={user}>
-      <MainContext.Provider value={{ comments, setComments, users }}>
+      <MainContext.Provider value={{ comments, setComments, users, newData, setNewData, success, setSucces }}>
         <Routes>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
