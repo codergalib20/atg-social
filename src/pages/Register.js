@@ -112,6 +112,8 @@ const Register = () => {
             }
         }
     };
+    // Login Functionality
+
     return (
         <div>
             <div className="container mx-auto px-4 min-h-screen">
@@ -166,7 +168,10 @@ const Register = () => {
                                         name="password"
                                         {...register("password", { required: true })}
                                     />
-                                    <button onClick={handleSubmit} className="bg-[#407bff] py-2 px-5 border-2 border-white shadow-lg mt-4 text-white" >Register</button>
+                                    <div className="flex items-center mt-4 gap-5">
+                                        <button onClick={handleSubmit} className="bg-[#407bff] py-2 px-5 border-2 border-white shadow-lg text-white" >Register</button>
+                                        <span onClick={() => location("/login")} className="text-red-600 font-medium block cursor-pointer">Already registerd?</span>
+                                    </div>
                                 </div>
                             </form>
                         </div>

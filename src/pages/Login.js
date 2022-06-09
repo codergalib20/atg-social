@@ -1,27 +1,36 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../App';
 
 import image from '../assets/login.gif';
 const Login = () => {
-    const location = useNavigate()
+    const navigate = useNavigate()
     const [error, setErrors] = useState({});
-    const { register, handleSubmit} = useForm();
+    const { register, handleSubmit } = useForm();
+    const [loading, setLoading] = useState(null);
+    const value = useContext(AuthContext);
+    console.log(value);
     const onSubmit = async data => {
-        console.log(data);
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/signin', data);
+            const response = await axios.post('https://sheltered-meadow-26881.herokuapp.com/api/auth/signin', data);
             localStorage.setItem("minisocial_token", response?.data?.token);
-            location("/")
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Logged in successfully',
-                showConfirmButton: false,
-                timer: 1500
-            })
+            if (response?.data?.token) {
+                // location('/');
+                console.log(response?.data?.token);
+                setTimeout(() => {
+                    navigate('/main');
+                }, 6000);
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Logged in successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
         } catch (err) {
             console.log(err);
             setErrors(err.response.data);
@@ -55,7 +64,10 @@ const Login = () => {
                                         name="password"
                                         {...register("password", { required: true })}
                                     />
-                                    <button type='submit' className="bg-[#407bff] py-2 px-5 border-2 border-white shadow-lg mt-4 text-white" >Login</button>
+                                    <div className="flex items-center mt-4 gap-5">
+                                        <button type='submit' className="bg-[#407bff] py-2 px-5 border-2 border-white shadow-lg text-white" >Login</button>
+                                        <span onClick={() => navigate("/register")} className="text-red-600 font-medium block cursor-pointer">Are you new user?</span>
+                                    </div>
                                 </div>
                             </div>
                         </form>

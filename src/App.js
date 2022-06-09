@@ -1,10 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import React, { createContext, useEffect, useState } from 'react';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import { Route, Routes } from 'react-router-dom';
 import Main from './pages/Main';
 import axios from 'axios';
+import Unsecure from './pages/Unsecure';
 
 export const AuthContext = createContext();
 export const MainContext = createContext();
@@ -13,6 +14,7 @@ const App = () => {
   const token = localStorage.getItem("minisocial_token");
   const [newData, setNewData] = useState({});
   const [success, setSucces] = useState("");
+  const [loading, setLoading] = useState(true);
   // Load Authenticate User---
   const callAboutPage = async () => {
     try {
@@ -24,6 +26,7 @@ const App = () => {
       console.error({ err })
     }
   }
+  
   useEffect(() => {
     callAboutPage()
   }, []);
@@ -60,23 +63,31 @@ const App = () => {
   }
   useEffect(() => {
     callUsers()
-  }, [])
+  }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 6000);
+  })
+
   const navigate = useNavigate();
   return (
     <AuthContext.Provider value={user}>
       <MainContext.Provider value={{ comments, setComments, users, newData, setNewData, success, setSucces }}>
         <Routes>
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
-
-          {
-            user ? (
-              <Route path="/*" element={<Main />} />
-            ) : (
-              navigate("/login")
-            )
-          }
-
+          {loading && (
+            <Route path="/" element={<div className="min-h-[400px] w-full flex items-center justify-center text-center text-red-500 font-medium">
+              <div className="lds-hourglass"></div>
+            </div>} />
+          )}
+          {!loading && user && <Route path="main/*" element={<Main />} />}
+          {!loading && !user && <Route path="main/*" element={<Main />} />}
+          {!loading && user && <Route path="login" element={<Login />} />}
+          {!loading && user && <Route path="/register" element={<Register />} />}
+          {!loading && !user && <Route path="login" element={<Login />} />}
+          {!loading && !user && <Route path="register" element={<Register />} />}
+          {/* {!loading && !user && navigate("/login")}  */}
+          {!loading && <Route path="*" element={<Navigate to={user ? "/" : "/login"} />} />}
         </Routes>
       </MainContext.Provider>
     </AuthContext.Provider>

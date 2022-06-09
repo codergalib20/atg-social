@@ -1,43 +1,45 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../App'
 const Profile = () => {
-
+    const value = useContext(AuthContext);
+    console.log(value);
     return (
         <div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Name : 
+                    Name :
                 </strong>
                 <span>
-                    Asadullah Hil Galib
+                   {" "}  {value?.name}
                 </span>
             </div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Username : 
+                    Username :
                 </strong>
                 <span>
-                    asadullah
+                   {" "}  {value?.username}
                 </span>
             </div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Email : 
+                    Email :
                 </strong>
                 <span>
-                    xyz@gmail.com
+                   {" "}  {value?.email}
                 </span>
             </div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Phone : 
+                    Join At :
                 </strong>
                 <span>
-                    +92-3-55555555
+                  {" "}   {value?.date}
                 </span>
             </div>
-            <div className="py-2 shadow-lg px-2">
+            {/* <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Address : 
+                    Address :
                 </strong>
                 <span>
                     Karachi, Pakistan
@@ -45,7 +47,7 @@ const Profile = () => {
             </div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Website : 
+                    Website :
                 </strong>
                 <span>
                     www.asadullah.com
@@ -53,13 +55,12 @@ const Profile = () => {
             </div>
             <div className="py-2 shadow-lg px-2">
                 <strong>
-                    Company : 
+                    Company :
                 </strong>
                 <span>
                     Asadullah
                 </span>
-            </div>
-
+            </div>  */}
         </div>
     );
 };

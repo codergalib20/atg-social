@@ -15,7 +15,6 @@ import Swal from 'sweetalert2';
 
 const Post = ({ post }) => {
     const [postss, setPostss] = useState(post);
-    console.log(postss);
     const [showtext, setShowText] = useState(false)
     const [comment, setComment] = useState("");
     const show = postss?.description?.slice(0, 60)
@@ -95,7 +94,7 @@ const Post = ({ post }) => {
             })
             return
         } else {
-            axios.patch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/update/post/${postss._id}`, {
+            axios.patch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/update/post/${postss?._id}`, {
                 title: editText?.title,
                 description: editText.description
             }).then(response => {
@@ -116,9 +115,9 @@ const Post = ({ post }) => {
             )
         }
     }
-    const filterComments = comments.filter(comment => comment.postId === postss._id);
+    const filterComments = comments.filter(comment => comment.postId === postss?._id);
     const likePost = async (id) => {
-        await fetch(`http://localhost:5000/api/posts/like/post`,
+        await fetch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/like/post`,
             {
                 method: "PUT",
                 headers: {
@@ -132,7 +131,6 @@ const Post = ({ post }) => {
             }).then(response => response.json())
             .then(data => {
                 if (data?.message === "liked") {
-                    console.log(data?.result)
                     setPostss({ ...postss, likes: data?.result?.likes })
                 }
             })
@@ -140,6 +138,28 @@ const Post = ({ post }) => {
                 console.log(err)
             })
     }
+    const unlikePost = async (id) => {
+        await fetch(`https://sheltered-meadow-26881.herokuapp.com/api/posts/unlike/post`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    id: id
+                })
+            }).then(response => response.json())
+            .then(data => {
+                if (data?.message === "unliked") {
+                    setPostss({ ...postss, likes: data?.data?.likes })
+                }
+            }
+            ).catch(err => {
+                console.log(err)
+            })
+    };
     return (
         <div>
             <div className='shadow-md px-4 my-6 border-t-4 border-cyan-600 rounded-lg'>
@@ -162,7 +182,7 @@ const Post = ({ post }) => {
                     </div>
                     {postss?.username === value?.username && <div className='flex items-center gap-4'>
                         <motion.div
-                            onClick={() => handleDeletePost(postss._id)}
+                            onClick={() => handleDeletePost(postss?._id)}
                             whileTap={{
                                 scale: 1.3,
                                 transition: {
@@ -205,19 +225,20 @@ const Post = ({ post }) => {
                         </div>
                         <div className='flex items-center justify-end gap-4 py-2'>
                             <div>
-                                <span className='text-md font-medium text-cyan-800'> {(postss?.likes?.length > 0) && (postss?.likes?.length > 9 ? (postss?.likes?.length + " Likes") : (postss?.likes?.length + " Like"))}
+                                <span className='text-md font-medium text-cyan-800 select-none'> {(postss?.likes?.length > 0) && (postss?.likes?.length > 9 ? (postss?.likes?.length + " Likes") : (postss?.likes?.length + " Like"))}
                                 </span>
                             </div>
-                            <motion.div
-                                onClick={() => likePost(postss._id)}
+                            {!postss?.likes?.includes(value?._id) && <motion.div
+                                onClick={() => likePost(postss?._id)}
                                 whileTap={{
                                     scale: 1.3,
                                     transition: {
                                         duration: 0.1,
                                         ease: "easeInOut"
                                     }
-                                }} className='text-3xl text-gray-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdOutlineFavoriteBorder /></motion.div>
-                            <motion.div
+                                }} className='text-3xl text-gray-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdOutlineFavoriteBorder /></motion.div>}
+                            {postss?.likes?.includes(value?._id) && <motion.div
+                                onClick={() => unlikePost(postss?._id)}
                                 whileTap={{
                                     scale: 1.3,
                                     transition: {
@@ -225,7 +246,8 @@ const Post = ({ post }) => {
                                         ease: "easeInOut"
                                     }
                                 }}
-                                className='text-3xl text-red-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdFavorite /></motion.div>
+                                className='text-3xl text-red-600 hover:bg-gray-100 w-10 h-10 flex items-center justify-center rounded-full overflow-hidden cursor-pointer'><MdFavorite />
+                            </motion.div>}
                         </div>
                         {/* Here is Comment Show */}
                         <div className='py-2 px-2'>

@@ -8,11 +8,11 @@ const AllPost = () => {
     let { error, posts, isLoading } = useSelector(state => state);
     const dispatch = useDispatch();
     const [allPosts, setAllPosts] = useState([]);
+    console.log(posts);
 
     useEffect(() => {
         dispatch(getAllPosts());
-    }, [])
-    console.log(success, newData)
+    }, [dispatch])
     useEffect(() => {
         setAllPosts(posts);
         if (success === "success") {
@@ -20,7 +20,8 @@ const AllPost = () => {
             console.log("Log")
             setSucces("")
         }
-    }, [newData, posts, setSucces, success])
+    }, [newData, posts, setSucces, success]);
+    
     return (
         <div>
             {
@@ -30,7 +31,7 @@ const AllPost = () => {
                     </div>
                 )
             }
-            {posts &&
+            {posts && !isLoading && 
                 <div className='px-4 pb-20'>
                     {allPosts?.map((post, index) => <Post post={post} key={index} />)}
                 </div>
